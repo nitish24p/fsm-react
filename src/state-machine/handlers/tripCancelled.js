@@ -6,7 +6,5 @@ const TripCancelled = {
       StateMachine.transitionToNextState(states.DRIVER_UNASSIGNED)
     );
   },
-  onInitialise(newState, StateMachine) {
-    setTim;
-  }
+  onInitialise(newState, StateMachine) {}
 };
