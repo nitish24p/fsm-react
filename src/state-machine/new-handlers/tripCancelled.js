@@ -1,6 +1,6 @@
 import { states } from '../state-constants';
 
-const TripCompleted = {
+const TripCancelled = {
   onEvent(event, StateMachine, stateUpdateCallback) {
     StateMachine.transitionToNextState(states.TRIP_REQUESTED);
   },
@@ -8,4 +8,4 @@ const TripCompleted = {
   onMessage() {}
 };
 
-export default TripCompleted;
+export default TripCancelled;

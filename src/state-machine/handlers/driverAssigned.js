@@ -11,7 +11,7 @@ const DriverAssigned = {
         }));
       } else {
         stateUpdateCallback(
-          StateMachine.transitionToNextState(states.TRIP_COMPLETED)
+          StateMachine.transitionToNextState(states.DRIVER_UNASSIGNED)
         );
         window.clearInterval(id);
       }
@@ -22,7 +22,8 @@ const DriverAssigned = {
   },
   changeState(newState, StateMachine, stateUpdateCallback) {
     stateUpdateCallback(StateMachine.transitionToNextState(newState));
-  }
+  },
+  onMessage() {}
 };
 
 export default DriverAssigned;

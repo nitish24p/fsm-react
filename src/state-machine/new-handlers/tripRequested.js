@@ -21,7 +21,9 @@ const TripRequested = {
         resolve(tripId);
       }, 500);
     });
-  }
+  },
+
+  onMessage() {}
 };
 
 export default TripRequested;

@@ -17,6 +17,10 @@ const DriverAssigned = {
   },
   onInitialise(newState, StateMachine) {
     console.log('Initialied the new State', newState);
+  },
+  onMessage(event, StateMachine, setState) {
+    console.log('Called');
+    StateMachine.transitionToNextState(states.TRIP_CANCELLED);
   }
 };
 

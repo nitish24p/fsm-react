@@ -17,7 +17,8 @@ class StateMachineApp extends React.PureComponent {
     this.state = {
       currentState: this.FSM.getCurrentState(),
       error: '',
-      loading: false
+      loading: false,
+      message: ''
     };
 
     this.FSM.addListener('TRANSITION', this.changeStateCb);
@@ -35,9 +36,58 @@ class StateMachineApp extends React.PureComponent {
     handlerContext.onEvent(event, this.FSM, this.updateState);
   };
 
+  socketMessage = event => {
+    const handlerContext = this.FSM.getCurrentStateContext();
+    handlerContext.onMessage(event, this.FSM, this.updateState);
+  };
+
   updateState = callback => {
     this.setState(callback);
   };
+
+  getButtonText() {
+    switch (this.state.currentState) {
+      case 'TRIP_REQUESTED':
+        return 'Book Trip';
+
+      case 'DRIVER_ASSIGNED':
+        return 'End Trip';
+
+      case 'PAYMENT_REQUESTED':
+        return 'Get Payment Details';
+
+      case 'TRIP_CANCELLED':
+        return 'Find Another Trip';
+
+      case 'TRIP_COMPLETED':
+        return 'Give Feedback';
+
+      default:
+        break;
+    }
+  }
+
+  getIcon() {
+    switch (this.state.currentState) {
+      case 'TRIP_REQUESTED':
+        return '📍';
+
+      case 'DRIVER_ASSIGNED':
+        return '🚖';
+
+      case 'PAYMENT_REQUESTED':
+        return '🤑';
+
+      case 'TRIP_COMPLETED':
+        return '✅';
+
+      case 'TRIP_CANCELLED':
+        return '🖕🏼';
+
+      default:
+        break;
+    }
+  }
 
   render() {
     const { currentState, error, loading, count } = this.state;
@@ -51,7 +101,14 @@ class StateMachineApp extends React.PureComponent {
               {currentState}
             </span>
           </h2>
-          {loading && <h1>Loading state</h1>}
+          {loading && <h1>Loading</h1>}
+          {count && <h2>Trip Duration is: {count}</h2>}
+
+          <h1 className="text-center h-16 text-6xl mt-5">
+            <span role="img" aria-label="icon">
+              {this.getIcon()}
+            </span>
+          </h1>
         </div>
 
         <div className="mt-10">
@@ -59,21 +116,18 @@ class StateMachineApp extends React.PureComponent {
             className="bg-gray-700 hover:bg-gray-800 focus:outline-none text-white  py-1 px-4 rounded"
             onClick={this.onClick}
           >
-            {' '}
-            Go To Next State{' '}
+            {this.getButtonText()}
           </button>
         </div>
 
-        {error && <h2>Error is: {error}</h2>}
-        {count && <h2>Trip Duration is: {count}</h2>}
-        {currentState === 'DRIVER_ASSIGNED' ? (
-          <div>
-            <button>Cancel</button>
-            <button>Complete</button>
-          </div>
-        ) : (
-          ''
-        )}
+        <div className="mt-10">
+          <button
+            onClick={this.socketMessage}
+            className="bg-gray-700 hover:bg-gray-800 focus:outline-none text-white  py-1 px-4 rounded"
+          >
+            Socket Message
+          </button>
+        </div>
       </div>
     );
   }

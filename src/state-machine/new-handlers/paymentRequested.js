@@ -22,7 +22,8 @@ const PaymentRequested = {
         }
       }, 500);
     });
-  }
+  },
+  onMessage() {}
 };
 
 export default PaymentRequested;
