@@ -1,13 +1,13 @@
 import { states } from './../state-constants';
 const TripRequested = {
-  onEvent(event, StateMachine, stateUpdateCallback) {
+  onEvent(event, StateMachine, setState) {
     console.log('got event', event);
-    stateUpdateCallback(() => ({ loading: true }));
+    setState(() => ({ loading: true }));
     this.requestTrip(event.id)
       .then(data => {
         // Transition to Next state
         console.log(data);
-        stateUpdateCallback(() => ({ loading: false }));
+        setState(() => ({ loading: false }));
         StateMachine.transitionToNextState(states.PAYMENT_REQUESTED);
       })
       .catch(error => {
@@ -23,7 +23,10 @@ const TripRequested = {
     });
   },
 
-  onMessage() {}
+  onMessage() {},
+  onExit(stateMachine, setState) {
+    console.log('Inside OnExit');
+  }
 };
 
 export default TripRequested;

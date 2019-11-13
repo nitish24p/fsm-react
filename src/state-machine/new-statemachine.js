@@ -11,8 +11,13 @@ class StateMachine {
     this.stateMachine = STATE_MACHINE;
     this.currentState = this.stateMachine.defaultState;
     this.currentStateContext = this.stateMachine[this.currentState];
+    this.setState = () => {};
 
     this.listeners = {};
+  }
+
+  setUpdater(callback) {
+    this.setState = callback;
   }
 
   getCurrentState() {
@@ -29,6 +34,20 @@ class StateMachine {
 
   setCurrentStateContext(nextState) {
     this.currentStateContext = this.stateMachine[nextState];
+  }
+
+  onExit() {
+    const context = this.getCurrentStateContext();
+    context.onExit &&
+      typeof context.onExit === 'function' &&
+      context.onExit(this, this.setState);
+  }
+
+  onInit() {
+    const context = this.getCurrentStateContext();
+    context.onInit &&
+      typeof context.onInit === 'function' &&
+      context.onInit(this, this.setState);
   }
 
   addListener(eventName, callback) {
@@ -76,6 +95,8 @@ class StateMachine {
       };
     }
 
+    this.onExit();
+
     this.setCurrentState(nextState);
     this.setCurrentStateContext(nextState);
 
@@ -86,6 +107,9 @@ class StateMachine {
       this.listeners[StateMachine.EVENTS.TRANSITION].forEach(callback =>
         callback(newState, newStateContext, this)
       );
+
+    //On INIT
+    this.onInit();
 
     return {
       currentState: nextState

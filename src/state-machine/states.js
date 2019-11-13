@@ -14,7 +14,8 @@ export const schema = {
   [StateMachineConstants.states.TRIP_REQUESTED]: {
     onEvent: TripRequested.onEvent.bind(TripRequested),
     onMessage: TripRequested.onMessage.bind(TripRequested),
-    allowedTransitions: [StateMachineConstants.states.PAYMENT_REQUESTED]
+    allowedTransitions: [StateMachineConstants.states.PAYMENT_REQUESTED],
+    onExit: TripRequested.onExit.bind(TripRequested)
   },
   [StateMachineConstants.states.PAYMENT_REQUESTED]: {
     onEvent: PaymentRequested.onEvent.bind(PaymentRequested),
