@@ -10,18 +10,13 @@ const DriverAssigned = {
           count
         }));
       } else {
-        stateUpdateCallback(
-          StateMachine.transitionToNextState(states.TRIP_COMPLETED)
-        );
+        StateMachine.transitionToNextState(states.TRIP_COMPLETED);
         window.clearInterval(id);
       }
     }, 1);
   },
   onInitialise(newState, StateMachine) {
     console.log('Initialied the new State', newState);
-  },
-  changeState(newState, StateMachine, stateUpdateCallback) {
-    stateUpdateCallback(StateMachine.transitionToNextState(newState));
   }
 };
 

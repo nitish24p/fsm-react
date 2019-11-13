@@ -1,6 +1,7 @@
 import React from 'react';
 import { schema } from './state-machine/states';
-import StateMachine from './state-machine';
+//import StateMachine from './state-machine';
+import StateMachine from './state-machine/new-statemachine';
 
 function changeState(prevState, props) {
   return {
@@ -18,15 +19,16 @@ class StateMachineApp extends React.PureComponent {
       error: '',
       loading: false
     };
+
+    this.FSM.addListener('TRANSITION', this.changeStateCb);
   }
+
+  changeStateCb = currentState => this.updateState({ currentState });
 
   onClick = event => {
     const handlerContext = this.FSM.getCurrentStateContext();
     event.id = '100';
     handlerContext.onEvent(event, this.FSM, this.updateState);
-    // .then(this.updateState)
-    // .catch();
-    // this.setState(changeState);
   };
 
   updateState = callback => {

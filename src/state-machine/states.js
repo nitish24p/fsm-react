@@ -1,7 +1,8 @@
 import * as StateMachineConstants from './state-constants';
-import TripRequested from './handlers/tripRequested';
-import PaymentRequested from './handlers/paymentRequested';
-import DriverAssigned from './handlers/driverAssigned';
+import TripRequested from './new-handlers/tripRequested';
+import PaymentRequested from './new-handlers/paymentRequested';
+import DriverAssigned from './new-handlers/driverAssigned';
+import TripCompleted from './new-handlers/tripCompleted';
 /**
  * state: {
  *   onEvent: 'someHandler',
@@ -11,8 +12,7 @@ import DriverAssigned from './handlers/driverAssigned';
 export const schema = {
   [StateMachineConstants.states.TRIP_REQUESTED]: {
     onEvent: TripRequested.onEvent.bind(TripRequested),
-    allowedTransitions: [StateMachineConstants.states.PAYMENT_REQUESTED],
-    beforeTransition: TripRequested.beforeTransition.bind(TripRequested)
+    allowedTransitions: [StateMachineConstants.states.PAYMENT_REQUESTED]
   },
   [StateMachineConstants.states.PAYMENT_REQUESTED]: {
     onEvent: PaymentRequested.onEvent.bind(PaymentRequested),
@@ -25,16 +25,12 @@ export const schema = {
     onEvent: DriverAssigned.onEvent.bind(DriverAssigned),
     allowedTransitions: [
       StateMachineConstants.states.TRIP_REQUESTED,
-      StateMachineConstants.states.DRIVER_UNASSIGNED
-    ],
-    onChangeState: DriverAssigned.changeState.bind(DriverAssigned),
-    onInitialise: DriverAssigned.onInitialise.bind(DriverAssigned)
-  },
-  [StateMachineConstants.states.DRIVER_UNASSIGNED]: {
-    onEvent: 'someHandler'
+      StateMachineConstants.states.TRIP_COMPLETED
+    ]
   },
   [StateMachineConstants.states.TRIP_COMPLETED]: {
-    onEvent: 'someHandler'
+    onEvent: TripCompleted.onEvent.bind(TripCompleted),
+    allowedTransitions: [StateMachineConstants.states.TRIP_REQUESTED]
   },
   defaultState: StateMachineConstants.states.TRIP_REQUESTED
 };
